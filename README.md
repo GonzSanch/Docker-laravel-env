@@ -1,7 +1,7 @@
 ## getting started
 `docker-compose up -d`\
 `docker-compose exec app php artisan key:generate` \
-`docker-compose exec app php artisan config:cache` \
+`docker-compose exec app php artisan config:cache` 
 
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
