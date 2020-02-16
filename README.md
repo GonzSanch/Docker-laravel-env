@@ -1,7 +1,11 @@
 ## Expose
-80/443 nginx --> laravel app 
-3306 --> mysql db 
-5000 --> phpmyadmin tool 
+80/443 nginx --> laravel app
+
+3306 --> mysql db
+
+5000 --> phpmyadmin tool
+
+9000 --> php service
 
 ## Getting started
 `docker-compose up -d`\
