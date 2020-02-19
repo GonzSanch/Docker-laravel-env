@@ -32,7 +32,7 @@ RUN docker-php-ext-install gd
 # Instalar composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# agregar usuario para la aplicación laravel
+# agregar usuario para la aplicación laravel, si falla con permisos comprobar id -u que coincida con 1000
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
