@@ -12,6 +12,9 @@
 `docker-compose exec app php artisan key:generate` \
 `docker-compose exec app php artisan config:cache` 
 
+## Artisan
+php artisan make:model Project -mc (create model, migration, controller named Project)
+
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
 ## About Laravel
