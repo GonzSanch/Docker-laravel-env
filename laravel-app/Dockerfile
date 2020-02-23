@@ -20,7 +20,11 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-	nodejs
+	nodejs \
+	npm
+
+#Actualizamos npm a la ultima version
+RUN npm install npm@latest -g
 
 # Borramos cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
