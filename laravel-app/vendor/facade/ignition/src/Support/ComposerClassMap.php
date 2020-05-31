@@ -8,7 +8,7 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class ComposerClassMap
 {
-    /** @var \Composer\Autoload\ClassLoader */
+    /** @var \Composer\Autoload\ClassLoader|FakeComposer */
     protected $composer;
 
     /** @var string */
@@ -16,7 +16,13 @@ class ComposerClassMap
 
     public function __construct(?string $autoloaderPath = null)
     {
-        $this->composer = require $autoloaderPath ?? base_path('/vendor/autoload.php');
+        $autoloaderPath = $autoloaderPath ?? base_path('/vendor/autoload.php');
+
+        if (file_exists($autoloaderPath)) {
+            $this->composer = require $autoloaderPath;
+        } else {
+            $this->composer = new FakeComposer();
+        }
         $this->basePath = app_path();
     }
 
@@ -53,16 +59,18 @@ class ComposerClassMap
 
         foreach ($prefixes as $namespace => $directories) {
             foreach ($directories as $directory) {
-                $files = (new Finder)
-                    ->in($directory)
-                    ->files()
-                    ->name('*.php');
+                if (file_exists($directory)) {
+                    $files = (new Finder)
+                        ->in($directory)
+                        ->files()
+                        ->name('*.php');
 
-                foreach ($files as $file) {
-                    if ($file instanceof SplFileInfo) {
-                        $fqcn = $this->getFullyQualifiedClassNameFromFile($namespace, $file);
+                    foreach ($files as $file) {
+                        if ($file instanceof SplFileInfo) {
+                            $fqcn = $this->getFullyQualifiedClassNameFromFile($namespace, $file);
 
-                        $classes[$fqcn] = $file->getRelativePathname();
+                            $classes[$fqcn] = $file->getRelativePathname();
+                        }
                     }
                 }
             }
@@ -80,17 +88,19 @@ class ComposerClassMap
 
         foreach ($prefixes as $namespace => $directories) {
             foreach ($directories as $directory) {
-                $files = (new Finder)
-                    ->in($directory)
-                    ->files()
-                    ->name('*.php');
+                if (file_exists($directory)) {
+                    $files = (new Finder)
+                        ->in($directory)
+                        ->files()
+                        ->name('*.php');
 
-                foreach ($files as $file) {
-                    if ($file instanceof SplFileInfo) {
-                        $basename = basename($file->getRelativePathname(), '.php');
+                    foreach ($files as $file) {
+                        if ($file instanceof SplFileInfo) {
+                            $basename = basename($file->getRelativePathname(), '.php');
 
-                        if ($basename === $missingClass) {
-                            return $namespace.basename($file->getRelativePathname(), '.php');
+                            if ($basename === $missingClass) {
+                                return $namespace.basename($file->getRelativePathname(), '.php');
+                            }
                         }
                     }
                 }

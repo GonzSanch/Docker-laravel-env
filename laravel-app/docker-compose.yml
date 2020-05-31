@@ -49,6 +49,7 @@ services:
   #phpmyadmin
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
     ports:
       - 5000:80
     environment:

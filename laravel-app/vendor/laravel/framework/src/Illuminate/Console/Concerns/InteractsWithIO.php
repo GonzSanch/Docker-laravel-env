@@ -199,10 +199,10 @@ trait InteractsWithIO
      * @param  array  $choices
      * @param  string|null  $default
      * @param  mixed|null  $attempts
-     * @param  bool|null  $multiple
-     * @return string
+     * @param  bool  $multiple
+     * @return string|array
      */
-    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
+    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = false)
     {
         $question = new ChoiceQuestion($question, $choices, $default);
 
@@ -218,11 +218,11 @@ trait InteractsWithIO
      * @param  \Illuminate\Contracts\Support\Arrayable|array  $rows
      * @param  string  $tableStyle
      * @param  array  $columnStyles
-     * @return \Symfony\Component\Console\Helper\Table
+     * @return void
      */
     public function table($headers, $rows, $tableStyle = 'default', array $columnStyles = [])
     {
-        $table = new Table($this->output->getOutput()->section());
+        $table = new Table($this->output);
 
         if ($rows instanceof Arrayable) {
             $rows = $rows->toArray();
@@ -235,8 +235,6 @@ trait InteractsWithIO
         }
 
         $table->render();
-
-        return $table;
     }
 
     /**

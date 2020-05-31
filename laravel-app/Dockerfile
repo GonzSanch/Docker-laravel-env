@@ -1,6 +1,6 @@
 FROM php:7.2-fpm
 
-# Copiar composer.lock y composer.json
+#Copia los composer
 COPY composer.lock composer.json /var/www/
 
 # Configura el directorio raiz
@@ -37,14 +37,16 @@ RUN docker-php-ext-install gd
 # Instalar composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+#Instalacion necesaria para React
+RUN composer require laravel/ui &&\
+    npm install react bootstrap bootstrap &&\
+    npm install --save react-router-dom
+
 # agregar usuario para la aplicación laravel, si falla con permisos comprobar id -u que coincida con 1000
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Copiar el directorio existente a /var/www
-COPY . /var/www
-
-# copiar los permisos del directorio de la aplicación
+# copiar directorio existente y los permisos del directorio de la aplicación
 COPY --chown=www:www . /var/www
 
 # cambiar el usuario actual por www
