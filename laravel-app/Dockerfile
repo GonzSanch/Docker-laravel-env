@@ -37,17 +37,20 @@ RUN docker-php-ext-install gd
 # Instalar composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-#Instalacion necesaria para React
-RUN composer require laravel/ui &&\
-    npm install react bootstrap bootstrap &&\
-    npm install --save react-router-dom
-
 # agregar usuario para la aplicación laravel, si falla con permisos comprobar id -u que coincida con 1000
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # copiar directorio existente y los permisos del directorio de la aplicación
 COPY --chown=www:www . /var/www
+
+#Instalacion necesaria para React
+RUN composer require laravel/ui &&\
+    npm install react bootstrap bootstrap &&\
+    npm install --save react-router-dom
+
+# node-modules
+RUN npm install && npm run dev
 
 # cambiar el usuario actual por www
 USER www
