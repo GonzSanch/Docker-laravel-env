@@ -46,7 +46,7 @@ COPY --chown=www:www . /var/www
 
 #Instalacion necesaria para React
 RUN composer require laravel/ui &&\
-    npm install react bootstrap bootstrap &&\
+    npm install react-bootstrap bootstrap &&\
     npm install --save react-router-dom
 
 # node-modules
