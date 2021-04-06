@@ -1,0 +1,56 @@
+version: '3'
+services:
+  #PHP
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: app-laravel
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./laravel-app:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+
+  #Nginx
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      #- "443:443" optional SSL
+    volumes:
+      - ./laravel-app:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+
+  #MySQL Service
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+      MYSQL_ROOT_PASSWORD: root
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./dbdata:/var/lib/mysql
+  #phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - 5000:80
+    environment:
+      PMA_HOST: db:3306
